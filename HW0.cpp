@@ -110,12 +110,10 @@ void addEgg(char *egg)
 	textcolor(YELLOW, BLACK);
 
 	if (isBoxFull(egg)) {
-		gotoxy(2, 14);
-		printf(" ++++++++++");
-		gotoxy(0, 15);
-		printf(">< %s ><\n\n", egg);
-		gotoxy(2, 16);
-		printf(" ++++++++++\n");
+		gotoxy(0, 14);
+		printf("   ++++++++++\n");
+		printf(">< %s ><\n", egg);
+		printf("   ++++++++++\n");
 		printf("\n   포장 완료!\n");
 	}
 
