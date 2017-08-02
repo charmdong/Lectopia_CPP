@@ -4,7 +4,7 @@
 
 void forEach(void *start, void *end, size_t size, void(*workData)(void *));
 void showPerson(void *vp);
-void inputPerson(void *);
+void inputPerson(void *vp);
 void myflush();
 
 typedef struct _person {
@@ -39,9 +39,9 @@ void forEach(void *start, void *end, size_t size, void(*workData)(void *))
 
 void showPerson(void *vp)
 {
-	printf("%s\n", ((Person*)vp)->name);
-	printf("%d\n", ((Person*)vp)->age);
-	printf("%lf\n\n", ((Person*)vp)->height);
+	printf("이름 : %s\n", ((Person*)vp)->name);
+	printf("나이 : %d\n", ((Person*)vp)->age);
+	printf("신장 : %.2lf\n\n", ((Person*)vp)->height);
 }
 
 void inputPerson(void *vp)
