@@ -16,7 +16,7 @@ typedef  struct  _list {	/* 연결 리스트 관리 구조체 */
 }List;
 
 BOOL createList(List *lp);					/* 연결 리스트 초기화 */
-BOOL addFirst(List *lp, int data);			/* head node 뒤에 node 추가(역순 저장) */
+BOOL addFirst(List *lp, void *data, size_t size, void(*memcpy)(void *, void *));			/* head node 뒤에 node 추가(역순 저장) */
 BOOL addLast(List *lp, void *data, size_t size, void(*memcpy)(void *, void *));			/* tail node 앞에 node 추가(정순 저장) */
 void displayList(List *lp, void(*dataPrint)(void*));					/* 리스트 내의 모든 데이터 출력 */
 BOOL removeNode(List *lp, void* data, int(*dataCompare)(void *,void *), void(*dataClear)(void *));		/* data 노드 삭제 */

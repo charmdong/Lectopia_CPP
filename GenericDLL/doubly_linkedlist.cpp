@@ -35,7 +35,7 @@ Parameters		: lp - 리스트 관리 구조체의 주소
 				  data - 추가할 데이터
 Returns			: 성공 - TRUE / 실패 - FALSE
 ----------------------------------------------------------------------------------*/
-BOOL addFirst(List *lp, int data)
+BOOL addFirst(List *lp, void *data, size_t size, void(*memcpy)(void *, void *))
 {
 	Node *newp;
 
@@ -43,9 +43,10 @@ BOOL addFirst(List *lp, int data)
 		return FALSE;
 	}
 
-	newp = (Node *)malloc(sizeof(Node)); /* 새 노드 생성 */
+	newp = (Node *)calloc(1, sizeof(Node) + size); /* 새 노드 생성 */
 	if (newp != NULL) {		/* 새 노드 생성 성공 시 처리 */
 		//newp->data = data;				/* 새 노드에 data 저장 */
+		memcpy(newp + 1, data);
 		newp->prev = lp->head;			/* 새 노드의 prev 설정 */
 		newp->next = lp->head->next;	/* 새 노드의 next 설정 */
 		lp->head->next->prev = newp;	/* 새 노드의 뒷 노드가 새 노드를 가리키도록 설정*/
