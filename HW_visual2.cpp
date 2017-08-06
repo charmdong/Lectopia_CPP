@@ -1,14 +1,17 @@
 #include <stdio.h>
 #include <conio.h>
 #include <windows.h>
+#define LEFT 75
+#define RIGHT 77
 #define ESC 27
 
 void gotoxy(int x, int y);
 void game();
-void shooting(int *cnt,int check);
+void moving(int *xCnt, int check);
 
 int main()
 {
+
 	game();
 	return 0;
 }
@@ -21,70 +24,92 @@ void gotoxy(int x, int y)
 
 void game()
 {
-	int cnt=0, check = 0;
-	char in;
-	
+	int check = 0;
+	char in = 0;
+	char ship[4][10] = { "    AA", "   |  |","  <    >","   ++++" };
+	int i, y, tmp;
+	int xCnt=0, yCnt = 20;
+
 	while (1) {
 		if (kbhit()) {
 			in = getch();
 			
 			if (in == -32) {
 				in = getch();
-
-				if (in == 75)
-					check = -1;
-				else if (in == 77)
-					check = 1;
+				switch (in) {
+				case LEFT: check = -1; moving(&xCnt, check); break;
+				case RIGHT: check = 1; moving(&xCnt, check); break;
+				}
 			}
-
+			
 			else if (in == ESC) { 
 				gotoxy(25, 12);
 				break; 
 			}
 		}
-		
-		if (cnt < -35) cnt = -35;
-		else if (cnt > 35) cnt = 35;
-		
-		shooting(&cnt, check);	
-		check = 0;
+
+		if (check == -1) {
+			y = 21;
+			for (i = 0; i < 4; i++) {
+				gotoxy(35 + xCnt, y++);
+				printf("\t\t");
+			}
+			xCnt--;
+		}
+		else if (check == 1)
+			xCnt++;
+
+		y = 21;
+		for (i = 0; i < 4; i++) {
+			gotoxy(35 + xCnt, y++);
+			printf("%s", ship[i]);
+		}
+		if (yCnt == 0) yCnt = 20;
+		while (yCnt) {
+			if (kbhit()) break;
+			if (yCnt == 20) tmp = xCnt;
+			gotoxy(40 +tmp, yCnt--);
+			printf("@");
+			Sleep(20);
+			printf("\b ");
+		}
+		y = 21;
+		for (i = 0; i < 4; i++) {
+			gotoxy(35 + xCnt, y++);
+			printf("\t\t");
+		}
 	}
 }
 
-void shooting(int *cnt, int check)
+void moving(int *xCnt, int check)
 {
 	char ship[4][10] = { "    AA", "   |  |","  <    >","   ++++" };
-	int i,y;
+	int i, y;
+
+	if (*xCnt < -35) *xCnt = -35;
+	else if (*xCnt > 35) *xCnt = 35;
 
 	if (check == -1) {
 		y = 21;
 		for (i = 0; i < 4; i++) {
-			gotoxy(35 + *cnt, y++);
+			gotoxy(35 + *xCnt, y++);
 			printf("\t\t");
 		}
-		(*cnt)--;
+		(*xCnt)--;
 	}
 
 	else if (check == 1)
-		(*cnt)++;
+		(*xCnt)++;
 
 	y = 21;
 	for (i = 0; i < 4; i++) {
-		gotoxy(35 + *cnt, y++);
+		gotoxy(35 + *xCnt, y++);
 		printf("%s", ship[i]);
 	}
 
-	y = 20;
-	while (y) {
-		gotoxy(40+*cnt, y--);
-		printf("@");
-		Sleep(20);
-		printf("\b ");
-	}
-
 	y = 21;
 	for (i = 0; i < 4; i++) {
-		gotoxy(35 + *cnt, y++);
+		gotoxy(35 + *xCnt, y++);
 		printf("\t\t");
 	}
 }
