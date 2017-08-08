@@ -67,6 +67,7 @@ void mInput(Stack *sp)
 		
 		if (push(sp, &data, sizeof(Person),personMemcpy) == FALSE)
 			printf("push ½ÇÆÐ!\n");
+		free(data.name);
 	}
 	
 }
