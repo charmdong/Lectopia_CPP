@@ -154,7 +154,7 @@ BOOL removeNode(List *lp, void* data, int(*dataCompare)(void *,void*), void(*dat
 						/* 삭제할 노드의 앞 노드와 삭제할 노드의 뒷 노드를 연결*/
 		delp->prev->next = delp->next;
 		delp->next->prev = delp->prev;
-		dataClear(delp + 1);
+		dataClear(delp + 1);	/* 부가메모리 해제 */
 		free(delp);   /* 노드 삭제 */
 		--lp->size;   /* 리스트 size 감소 */
 		return TRUE;
@@ -172,7 +172,7 @@ void sortList(List *lp, size_t size, int(*dataCompare)(void *, void*), void(*mem
 {
 	Node *curp;
 	Node *nextp;
-	Node *temp;
+	Node *temp;		// void *temp로 하고 temp = malloc(size); 해줘도 됨
 
 	if (lp == NULL) { /* lp포인터 NULL check */
 		return;

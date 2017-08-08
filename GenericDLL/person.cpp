@@ -6,11 +6,12 @@ void personMemcpy(void *p1, void *p2)
 	Person *val1 = (Person*)p1, *val2 = (Person*)p2;
 	if (val1 == NULL || val2 == NULL) return;
 
-	if (val1->name != NULL)
+	if (val1->name != NULL) {
 		memset(val1->name, 0, strlen(val1->name));
-	if (val2->name == NULL) {
+		val1->name = NULL;
+	}
+	if (val2->name == NULL && val1->name != NULL) {
 		memset(val1->name, 0, strlen(val1->name));
-		free(val1->name);
 		val1->name = NULL;
 	}
 	else {

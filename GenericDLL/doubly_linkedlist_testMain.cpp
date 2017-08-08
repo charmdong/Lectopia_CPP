@@ -84,8 +84,6 @@ void mInput(List *lp)
 	//int res;  /* scanf()함수의 리턴 값 저장 */
 	BOOL bres;
 	char test[10];
-	inData.name = (char*)malloc(sizeof(char) * MAX_NAME);
-	if (inData.name == NULL) return;
 
 	printf("\n[ 입력하기 메뉴 ]\n\n");
 
@@ -96,7 +94,9 @@ void mInput(List *lp)
 			myflush();
 			break;
 		}
-		
+		inData.name = (char*)malloc(sizeof(char) * strlen(tmp) + 1);
+		if (inData.name == NULL) return;
+
 		strcpy(inData.name, tmp);
 		printf("# 나이를 입력하세요 : ");
 		scanf("%d", &inData.age);
@@ -107,6 +107,9 @@ void mInput(List *lp)
 			printf("@ 데이터 추가 성공!\n");
 		else
 			printf("@ 데이터 추가 실패!\n");
+		personClear(inData.name);
+		free(inData.name);	// 안해주면 while문 실행 시마다 메모리 누수가 발생하게 됨.
+		inData.name = NULL;
 	}
 
 	return;
@@ -132,9 +135,7 @@ void mSearch(List * lp)
 	Node *resp;		/* 검색된 노드의 시작주소 저장 */
 	//int res;		/* scanf()함수의 리턴 값 저장 */
 	int choice;
-
-	sData.name = (char *)malloc(sizeof(char)*MAX_NAME);
-	if (sData.name == NULL) return;
+	char tmp[MAX_NAME];
 
 	printf("\n[ 검색하기 메뉴 ]\n\n");
 	printf("1. 이름으로 검색하기\n2. 나이로 검색하기\n3. 이름과 나이로 검색하기\n선택 >> ");
@@ -144,8 +145,11 @@ void mSearch(List * lp)
 	while (1) {
 		if (choice == 1) {
 			printf("# 검색할 이름을 입력하세요 (end 입력시 종료) : ");
-			scanf("%s", sData.name);
-			if (!strcmp(sData.name, "end")) break;
+			scanf("%s", tmp);
+			if (!strcmp(tmp, "end")) break;
+			sData.name = (char *)malloc(sizeof(char)*(strlen(tmp)+1));
+			if (sData.name == NULL) return;
+			strcpy(sData.name, tmp);
 			resp = searchNode(lp, &sData, personNameCompare);
 		}
 		else if (choice == 2) {
@@ -166,10 +170,9 @@ void mSearch(List * lp)
 		else {				/* 데이터를 못찾았으면 */
 			printf("@ 검색 데이터 존재하지 않음!\n");
 		}
+		memset(sData.name, 0, strlen(sData.name));
+		free(sData.name);
 	}
-	memset(sData.name, 0, strlen(sData.name));
-	free(sData.name);
-	sData.age = 0;
 	myflush();
 	return;
 }
