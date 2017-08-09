@@ -65,6 +65,8 @@ void input(Queue *qPtr)
 		myFlush();
 		if (!enqueue(qPtr, &enqueData, sizeof(Person), personMemcpy))
 			printf("enqueue 실패!!\n");
+		memset(enqueData.name, 0, strlen(enqueData.name));
+		free(enqueData.name);
 	}
 }
 /*------------------------------------------------------------------------------------------------------------
@@ -93,6 +95,8 @@ void myDelete(Queue *qPtr)
 		else
 			printf("dequeue 실패!\n");
 	}
+	memset(dequeData.name, 0, strlen(dequeData.name));
+	free(dequeData.name);
 }
 /*------------------------------------------------------------------------------------------------------------
 Function name	: menu() - 메뉴를 출력하고 메뉴번호를 입력 받아 리턴 함
