@@ -16,10 +16,9 @@ MyString::MyString(const char *cp)
 
 MyString::MyString(const MyString &br)
 {
-	int slen = strlen(br.str);
-	this->str = new char[slen + 1];
+	this->str = new char[br.len + 1];
 	strcpy(this->str, br.str);
-	this->len = slen;
+	this->len = br.len;
 }
 
 MyString::~MyString()
@@ -49,28 +48,26 @@ int MyString::getLen()
 MyString& MyString::operator=(const MyString &br)
 {
 	if (this == &br) return *this;
-	int slen = strlen(br.str);
 	delete[] this->str;
-	this->str = new char[slen + 1];
+	this->str = new char[br.len + 1];
 	strcpy(this->str, br.str);
-	this->len = slen;
+	this->len = br.len;
 	return *this;
 }
 
 MyString MyString::operator+(const MyString &br)
 {
 	MyString temp;
-	int slen = strlen(this->str) + strlen(br.str);
-	temp.str = new char[slen + 1];
+	temp.str = new char[this->len + br.len + 1];
 	strcpy(temp.str, this->str);
 	strcat(temp.str, br.str);
-	temp.len = slen;
+	temp.len = this->len + br.len;
 	return temp;
 }
 
 bool MyString::operator>(const MyString &br)
 {
-	if (strcmp(this->str, br.str) > 0)
+	if (this->len > br.len)
 		return true;
 	else
 		return false;
