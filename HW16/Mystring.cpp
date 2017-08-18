@@ -1,4 +1,4 @@
-#include "Mystring.h"
+uj#include "Mystring.h"
 
 MyString::MyString(): len(0)
 {
@@ -8,10 +8,9 @@ MyString::MyString(): len(0)
 
 MyString::MyString(const char *cp)
 {
-	int slen = strlen(cp);
-	this->str = new char[slen + 1];
+	this->len = strlen(cp);
+	this->str = new char[this->len + 1];
 	strcpy(this->str, cp);
-	this->len = slen;
 }
 
 MyString::MyString(const MyString &br)
@@ -28,11 +27,10 @@ MyString::~MyString()
 
 void MyString::setStr(char *cp)
 {
-	int slen = strlen(cp);
 	delete[] this->str;
-	this->str = new char[slen + 1];
+	this->len = strlen(cp);
+	this->str = new char[this->len + 1];
 	strcpy(this->str, cp);
-	this->len = slen;
 }
 
 char* MyString::getStr()
