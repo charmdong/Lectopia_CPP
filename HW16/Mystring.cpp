@@ -1,4 +1,4 @@
-uj#include "Mystring.h"
+#include "Mystring.h"
 
 MyString::MyString(): len(0)
 {
@@ -73,7 +73,7 @@ bool MyString::operator>(const MyString &br)
 
 void MyString::operator<<(ostream &os)
 {
-	os << this->getStr() << "(" << this->getLen() << ")";
+	os << this->str << "(" << this->len << ")";
 }
 
 void MyString::operator>>(istream &is)
