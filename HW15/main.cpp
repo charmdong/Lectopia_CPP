@@ -32,16 +32,11 @@ void menu()
 		myflush();
 		if (choice == 6) break;
 		switch (choice) {
-		case 1:
-			addMem(fary, memberCnt); break;
-		case 2:
-			infoAll(fary, memberCnt);  break;
-		case 3:
-			searchMem(fary, memberCnt); break;
-		case 4:
-			delMem(fary, memberCnt); break;
-		case 5:
-			specialMem(fary, memberCnt); break;
+		case 1: addMem(fary, memberCnt); break;
+		case 2: infoAll(fary, memberCnt);  break;
+		case 3: searchMem(fary, memberCnt); break;
+		case 4: delMem(fary, memberCnt); break;
+		case 5: specialMem(fary, memberCnt); break;
 		}
 	}
 	destroyMem(fary, memberCnt);
@@ -55,28 +50,24 @@ void addMem(Fitness **fary, int &memberCnt)
 	}
 
 	int id;
-	char tmpName[20];
+	char name[20];
 	double weight, height;
 
-	cout << "\n회원 아이디 입력 : ";
+	cout << "\n회원 번호 입력 : ";
 	cin >> id;
 	cout << "이름 입력 : ";
-	cin >> tmpName;
+	cin >> name;
 	cout << "몸무게 입력 : ";
 	cin >> weight;
 	cout << "키 입력 : ";
 	cin >> height;
-	fary[memberCnt] = new Fitness;
-	fary[memberCnt]->setNum(id);
-	fary[memberCnt]->setName(tmpName);
-	fary[memberCnt]->setWeight(weight);
-	fary[memberCnt]->setHeight(height);
-	memberCnt++;
+
+	fary[memberCnt++] = new Fitness(id, name, weight, height);
 }
 
 void infoMem(Fitness **fary, int index)
 {
-	cout << "\n회원 아이디 : " << fary[index]->getNum() << endl;
+	cout << "\n회원 번호 : " << fary[index]->getNum() << endl;
 	cout << "회원 이름 : " << fary[index]->getName() << endl;
 	cout << "회원 몸무게 : " << fary[index]->getWeight() << endl;
 	cout << "회원 키 : " << fary[index]->getHeight() << endl;
@@ -85,6 +76,11 @@ void infoMem(Fitness **fary, int index)
 
 void infoAll(Fitness **fary, int &memberCnt)
 {
+	if (!memberCnt) {
+		cout << "\n + 회원이 한명도 존재하지 않습니다 ㅠㅠ +" << endl;
+		return;
+	}
+
 	for (int i = 0; i < memberCnt; i++)
 		infoMem(fary, i);
 }
@@ -94,14 +90,19 @@ void searchMem(Fitness **fary, int &memberCnt)
 	string search;
 	int i;
 
-	cout << "찾을 회원 이름 입력 : ";
+	if (!memberCnt) {
+		cout << "\n + 회원이 한명도 존재하지 않습니다 ㅠㅠ +" << endl;
+		return;
+	}
+
+	cout << "\n찾을 회원 이름 입력 : ";
 	cin >> search;
 	for (i = 0; i < memberCnt; i++)
 		if (fary[i]->getName() == search)
 			break;
 	
 	if (i == memberCnt) {
-		cout << "\n+ No information +\n" << endl;
+		cout << "\n+ 해당 이름의 회원이 존재하지 않습니다 +" << endl;
 		return;
 	}
 	
@@ -109,42 +110,54 @@ void searchMem(Fitness **fary, int &memberCnt)
 	return;
 }
 
-void delMem(Fitness **fary, int &memCnt)
+void delMem(Fitness **fary, int &memberCnt)
 {
-	int id, i, check;
+	int id, i, del;
 	
-	cout << "삭제할 아이디 입력 : ";
+	if (!memberCnt) {
+		cout << "\n + 회원이 한명도 존재하지 않습니다 ㅠㅠ +" << endl;
+		return;
+	}
+
+	cout << "삭제할 회원 번호 입력 : ";
 	cin >> id;
 
-	for (i = 0; i < memCnt; i++)
+	for (i = 0; i < memberCnt; i++)
 		if (id == fary[i]->getNum())
 			break;
 
-	if (i == memCnt) {
-		cout << "\n+ No information +\n" << endl;
+	if (i == memberCnt) {
+		cout << "\n+ 해당 번호의 회원이 존재하지 않습니다 +\n" << endl;
 		return;
 	}
-	check = i;
-	delete fary[check];
+	del = i;
+	delete fary[del];
 
-	for (i = memCnt-1; i > check; i--)
+	for (i = memberCnt-1; i > del; i--)
 		fary[i - 1] = fary[i];
-	memCnt--;
+	fary[memberCnt - 1] = NULL;
+	memberCnt--;
 }
 
-void specialMem(Fitness **fary, int &memCnt)
+void specialMem(Fitness **fary, int &memberCnt)
 {
 	int i;
 
+	if (!memberCnt) {
+		cout << "\n + 회원이 한명도 존재하지 않습니다 ㅠㅠ +" << endl;
+		return;
+	}
+
 	cout << "\n+ bmi지수 25이상 회원들 +" << endl;
-	for (i = 0; i < memCnt; i++)
-		if (fary[i]->bmi() >= 25.0)
+	for (i = 0; i < memberCnt; i++)
+		if (fary[i]->bmi() >= 25)
 			infoMem(fary, i);
 }
 
-void destroyMem(Fitness **fary, int &memCnt)
+void destroyMem(Fitness **fary, int &memberCnt)
 {
-	for (int i = 0; i < memCnt; i++)
+	if (!memberCnt) return;
+	for (int i = 0; i < memberCnt; i++)
 		delete fary[i];
 }
 
