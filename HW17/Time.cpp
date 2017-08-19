@@ -1,5 +1,5 @@
 #include "Time.h"
-#define EPSILON 0.000001
+#include <float.h>
 
 int Time::mode = 0;
 
@@ -18,10 +18,10 @@ Time::Time(double t):hour(t),time(t)
 		부동소수점 정밀도로 인해서 각각
 		0.299999~ 와 0.899999~ 로 인식되어 제대로 된
 		결과 값이 나오지 않았습니다. 
-		이에 따라서 매크로상수 EPSILON을 사용하여
-		더해주고 계산하였습니다.
+		이에 따라서 float.h에 정의되어 있는 DBL_EPSILON을
+		사용하여 이를 더해주고 계산하였습니다.
 	*/
-	this->min = (time-hour+EPSILON) * 60;
+	this->min = (time-hour+DBL_EPSILON) * 60;
 }
 
 Time::Time(const Time &tr) : hour(tr.hour), min(tr.min), time(tr.time)
