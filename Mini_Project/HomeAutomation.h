@@ -5,18 +5,11 @@
 #include "RiceCooker.h"
 #include "Washer.h"
 #include "Power.h"
-int controlMenuSelect(string message, int menuCnt); 
-// 가전제품의 상태변경 처리를 위한 메뉴 함수
-void displayTitle(string title); 
-// 처리중인 내용 출력하기 위한 타이틀 출력함수 
-int inputInteger(char *message);  
-//  message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
-int inputInteger(string message); 
-//  message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
-void myFlush();  
-// cin입력 버퍼를 모두 비우고 fail상태를 초기상태로 재설정
-
 #define APPLIANCE_MAX_CNT 20 // 최대 등록 가능한 가전제품의 개수
+
+int inputInteger(char *message);  //  message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
+int inputInteger(string message); //  message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
+void myFlush();  // cin입력 버퍼를 모두 비우고 fail상태를 초기상태로 재설정
 
 class HomeAutomation
 {

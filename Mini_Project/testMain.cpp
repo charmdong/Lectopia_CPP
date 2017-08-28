@@ -11,9 +11,9 @@ void controlAppliance(HomeAutomation &rHa); // 등록된 가전제품 제어하기
 void addAppliance(HomeAutomation &rHa); // 가전제품 등록
 void deleteAppliance(HomeAutomation &rHa); // 가전제품 삭제
 void powerDisplay(Power &rPw, HomeAutomation &rHa);  // 전력소모량 출력
-int inputInteger(char *message);  //  message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
-int inputInteger(string message); //  message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
-void myFlush();  // cin입력 버퍼를 모두 비우고 fail상태를 초기상태로 재설정
+//int inputInteger(char *message);  //  message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
+//int inputInteger(string message); //  message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
+//void myFlush();  // cin입력 버퍼를 모두 비우고 fail상태를 초기상태로 재설정
 
 int main()
 {
@@ -120,12 +120,18 @@ void deleteAppliance(HomeAutomation &rHa) // 가전제품 삭제
 {
 	string machineName;  // 제품명
 	bool res;
+	char choice;
 
 	displayTitle("가전제품 삭제 하기");
 
 	cout << "* 제품명 입력( 예)거실전등, 세탁기 등) : ";
 	cin >> machineName;
 	
+	cout << "** 정말로 삭제하시겠습니까? (y/n) : ";
+	cin >> choice;
+	if (choice != 'Y' && choice != 'y')
+		return;
+
 	res=rHa.deleteAppliance(machineName);
 	if(res) 
 	{
@@ -181,45 +187,3 @@ void displayTitle(string title) // 화면 타이틀 출력 함수
 	cout << "    " << title << endl;
 	cout << "------------------------------" <<endl;
 }
-
-// message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
-int inputInteger(char *message)
-{
-	int number;
-
-	while (1){
-		cout << message;
-		cin >> number;
-
-		if (cin.get() == '\n'){
-			return number;
-		}
-	
-		myFlush();
-	}
-}
-
-// message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
-int inputInteger(string message)
-{
-	int number;
-
-	while (1){
-		cout << message;
-		cin >> number;
-
-		if (cin.get() == '\n'){
-			return number;
-		}
-	
-		myFlush();
-	}
-}
-
-// 기능 : cin입력 버퍼를 모두 비우고 fail상태를 초기상태로 재설정
-void myFlush()
-{
-	cin.clear();  // 에러로 설정되어있는 flag멤버의 값을 0으로 재초기화
-	while(cin.get() != '\n') ;  // 개행문자가 나올때까지 버퍼내의 모든 문자 지움
-}
-	

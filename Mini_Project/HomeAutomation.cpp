@@ -117,16 +117,22 @@ bool HomeAutomation::deleteAppliance(string machineName)
 
 void HomeAutomation::listDisplayAppliance()
 {
-	for (int i = 0; i < this->applianceCnt; i++) {
-		cout << i+1 <<". " << this->applianceArray[i]->getMachineName() << endl;
+	int i;
+	for (i = 0; i < this->applianceCnt; i++) {
+		cout << i+1 <<". " << this->applianceArray[i]->getMachineName() <<" ";
+		if (!this->applianceArray[i]->getPowerFlag()) {
+			cout << "(꺼짐)" << endl;
+			return;
+		}
+		cout << "(켜짐)" << endl;
 		this->applianceArray[i]->stateView();
 	}
 }
 
 bool HomeAutomation::controlAppliance(string machineName)
 {
-	int state, temper;
 	char choice;
+	int state;
 	int index = searchMachine(machineName);
 	AirConditioner *air;
 	Washer *wash;
@@ -138,36 +144,38 @@ bool HomeAutomation::controlAppliance(string machineName)
 	}
 
 	if (!this->applianceArray[index]->getPowerFlag()) {
-		cout << "해당 제품의 전원을 켜시겠습니까? (y/n) : ";
+		cout << "\n해당 제품의 전원을 켜시겠습니까? (y/n) : ";
 		cin >> choice;
-		if (choice == 'y')
+		if (choice == 'y' || choice == 'Y')
 			this->applianceArray[index]->turnOn();
 		else return false;
 	}
 
 	if (air = dynamic_cast<AirConditioner *>(this->applianceArray[index])) {
-		cout << "+ 제품의 상태를 제어합니다 +" << endl;
+		cout << "\n+ 제품의 상태를 제어합니다 +" << endl;
 		cout << "원하는 제품의 상태를 선택해주세요 : " << endl;
-		cout << "1.송풍 2.냉방 3.난방 4.끄기\n>> ";
-		cin >> state;
+		state = inputInteger("1.송풍 2.냉방 3.난방 4.끄기\n>> ");
 		switch(state){
 		case 1: air->setMachineState(AirConditioner::SENDAIR); break;
 		case 2: air->setMachineState(AirConditioner::COOLER); break;
 		case 3: air->setMachineState(AirConditioner::HEATER); break;
 		case 4: this->applianceArray[index]->turnOff(); break;
 		}
-		cout << "+ 제품의 설정온도를 제어합니다 +" << endl;
-		cout << "원하는 제품의 설정온도를 입력해주세요 : ";
-		cin >> temper;
-		air->setSetTemperature(temper);
+		if (state != 4) {
+			cout << "\n+ 제품의 설정온도를 제어합니다 +" << endl;
+			state = inputInteger("1.온도 올리기 2.온도 내리기 3.온도 조절 종료\n>> ");
+			switch (state) {
+			case 1: ++(*air); cout << "현재 설정 온도 : " << air->getSetTemperature() << endl; break;
+			case 2: --(*air); cout << "현재 설정 온도 : " << air->getSetTemperature() << endl; break;
+			case 3: myFlush();
+			}
+		}
 	}
 
 	if (wash = dynamic_cast<Washer *>(this->applianceArray[index])) {
-		cout << "+ 제품의 상태를 제어합니다 +" << endl;
+		cout << "\n+ 제품의 상태를 제어합니다 +" << endl;
 		cout << "원하는 제품의 상태를 선택해주세요 : " << endl;
-		cout << "1.무동작 2.일반빨래 3.삶은빨래 4.건조 5.끄기\n>> ";
-		cin >> state;
-		switch (state) {
+		switch (inputInteger("1.무동작 2.일반빨래 3.삶은빨래 4.건조 5.끄기\n>> ")) {
 		case 1: wash->setMachineState(Washer::NO_OPERATION); break;
 		case 2: wash->setMachineState(Washer::GENERAL); break;
 		case 3: wash->setMachineState(Washer::BOIL); break;
@@ -177,11 +185,9 @@ bool HomeAutomation::controlAppliance(string machineName)
 	}
 
 	if (rice = dynamic_cast<RiceCooker *>(this->applianceArray[index])) {
-		cout << "+ 제품의 상태를 제어합니다 +" << endl;
+		cout << "\n+ 제품의 상태를 제어합니다 +" << endl;
 		cout << "원하는 제품의 상태를 선택해주세요 : " << endl;
-		cout << "1.무동작 2.보온 3.밥짓기 4.데우기 5.끄기\n>> ";
-		cin >> state;
-		switch (state) {
+		switch (inputInteger("1.무동작 2.보온 3.밥짓기 4.데우기 5.끄기\n>> ")) {
 		case 1: rice->setMachineState(RiceCooker::NO_OPERATION); break;
 		case 2: rice->setMachineState(RiceCooker::WARM); break;
 		case 3: rice->setMachineState(RiceCooker::COOK); break;
@@ -195,4 +201,42 @@ bool HomeAutomation::controlAppliance(string machineName)
 void HomeAutomation::setStateAppliance(Appliance *ap)
 {
 	ap->getPowerFlag() ? ap->turnOff() : ap->turnOn();
+}
+
+// message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
+int inputInteger(char *message)
+{
+	int number;
+
+	while (1) {
+		cout << message;
+		cin >> number;
+
+		if (cin.get() == '\n')
+			return number;
+		myFlush();
+	}
+}
+
+// message를 출력하고 정수값 입력 받아 리턴(문자, 실수값 예외 처리)
+int inputInteger(string message)
+{
+	int number;
+
+	while (1) {
+		cout << message;
+		cin >> number;
+
+		if (cin.get() == '\n') 
+			return number;
+
+		myFlush();
+	}
+}
+
+// 기능 : cin입력 버퍼를 모두 비우고 fail상태를 초기상태로 재설정
+void myFlush()
+{
+	cin.clear();  // 에러로 설정되어있는 flag멤버의 값을 0으로 재초기화
+	while (cin.get() != '\n');  // 개행문자가 나올때까지 버퍼내의 모든 문자 지움
 }
